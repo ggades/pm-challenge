@@ -17,10 +17,10 @@
 .bloco-seletor-adulto-selected, .bloco-seletor-crianca-selected{
   background-color: #493E38 !important;
 }
-.mcolor-label-text, #caminho ul li a, .mcolor-label-text2{
+.mcolor-label-text, #caminho ul li a, .mcolor-label-text2, #destino:hover, #datas:hover, #adultos:hover, #criancas:hover, #modificarBusca:hover{
   color: #F6534C;
 }
-.mcolor-action-btn, .mcolor-action-btn:hover{
+.mcolor-action-btn, .mcolor-action-btn:hover, .modal-promo-content .promo .btn{
   background-color: #F6534C !important;
 }
 #busca-promocode-label{
@@ -137,6 +137,108 @@
 .itemVarValorAuxiliar{
   margin: 0;
   float: left;
+}
+
+/**
+ * Modal
+ */
+.modal-promo {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.8);
+}
+.modal-promo-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 30px 20px;
+  width: 970px;
+  height: 550px;
+  position: fixed;
+  left: calc(50% - 485px);
+  border-radius: 8px;
+  box-shadow: 0px 0px 20px #666;
+  box-sizing: border-box;
+}
+.modal-hotel-list{
+  max-height: 430px;
+  overflow-y: auto;
+}
+.modal-promo-content h1{
+  padding-left: 35px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  font-size: 25px;
+}
+.modal-promo-content .close{
+  position: absolute;
+  top: -55px;
+  right: 0;
+  background: transparent url(img/sprite-modal.png) no-repeat;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  color: #FFF;
+  font-size: 35px;
+  cursor: pointer;
+}
+.modal-promo-content ul{
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+.modal-promo-content .promo{
+  width: 25%;
+  min-height: 190px;
+  border-left: 1px dotted #CCC;
+  float: left;
+  margin-bottom: 35px;
+  box-sizing: border-box;
+  padding: 0 35px;
+}
+.modal-promo-content .promo.no-border{
+  border: 0;
+}
+.modal-promo-content .promo .title{
+  font-weight: bold;
+  font-size: 15px;
+}
+.modal-promo-content .promo .old-value, .modal-promo-content .promo .new-value{
+  width: 50%;
+  display: inline-block;
+}
+.modal-promo-content .values{
+  margin-bottom: 15px;
+}
+.modal-promo-content .promo .old-value{
+  text-decoration: line-through;
+  text-align: left;
+  color: #666;
+  font-size: 13px;
+}
+.modal-promo-content .promo .new-value{
+  text-align: right;
+  color: #F46523;
+  font-size: 18px;
+}
+.modal-promo-content .promo .btn{
+  width: 135px;
+  height: 40px;
+  color: #FFF;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 500;
 }
 
 /**

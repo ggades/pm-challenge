@@ -5,41 +5,134 @@ const Letsbook = (function() {
       Public.appendCSS();
       Public.changeLogo();
 
+			// Insert Modal
+      Public.insertModal();
+
       // Events
-      Public.removeButtonEvent();
+      Public.addButtonEvents();
 		},
 
+    // Change the header logo
     changeLogo: function(){
       const img = document.querySelector('#navContent img');
       img.src = 'https://i.imgur.com/VMNACWl.png';
     },
 
     appendCSS: function() {
-      const css = document.createElement('style');
+      const css = document.createElement('link');
       css.type = "text/css";
       css.rel = "stylesheet";
-      css.innerHTML = '#navContent img{margin-top:-18px!important}.mcolor-header{background-color:#F6534C;color:#FFF}.mcolor-cliente-principal-bg{background-color:#302C29}.mcolor-busca-bright,.mcolor-busca-bright:hover,.mcolor-cliente-principal-bg-hover2:hover{background-color:#493E38}.bloco-seletor-adulto-selected,.bloco-seletor-crianca-selected{background-color:#493E38!important}#busca-calendario .celulaData.endDate,#busca-calendario .celulaData.startDate,#busca-calendario .celulaData:hover,#busca-calendario .inBetweenDate:hover,.mcolor-action-btn,.mcolor-action-btn:hover{background-color:#F6534C!important}#caminho ul li a,.mcolor-label-text,.mcolor-label-text2{color:#F6534C}#busca-promocode-label{color:#FFF}.gridDatas .blocoData{width:45px}#busca-calendario .celulaData:hover,#busca-calendario .inBetweenDate:hover{border-radius:5px}#busca-calendario .celulaData.startDate,#busca-calendario .celulaData.startDate:hover{border-radius:50px 0 0 50px}#busca-calendario .celulaData.endDate,#busca-calendario .celulaData.endDate:hover{border-radius:0 50px 50px 0}#busca-calendario .inBetweenDate{background-color:#493E38}.page-content{background:0 0;box-shadow:none!important}#listagemHoteis .itemHotel{width:30%;min-height:510px;margin-left:4.5%;box-shadow:2px 3px 6px #d3d3d3;padding:20px;background-color:#FFF;box-sizing:border-box;border-radius:8px}#listagemHoteis .itemHotelContent{height:auto;clear:both;margin:0}#listagemHoteis .itemHotel:first-child{margin-left:0}.itemHotelContent .itemVarNomeHotel{font-size:20px;min-height:55px}.tituloHotel{height:auto}.itemHotelContent .blocoReserve{position:relative;background-color:transparent;float:left;width:100%;min-height:45px}.itemHotel .slider-imagens-hotel{float:none;margin:0 10px 10px}.icoAcomodacaoUmaPessoa{width:40px}.hoteis-ico-mais-pessoas{font-size:12px;top:3px;left:18px}.itemHotelContent .infoAcomodacao{margin:25px 0}.itemHotelContent .infoAcomodacao .itemVarDescricaoAcomodacao{margin-left:40px}#listagemHoteis .itemHotel:last-child{padding:20px}.itemHotelContent .blocoReserve .itemVarValorSemDesconto,.valorContainer{width:50%;float:left;text-align:left;clear:left}.valorContainer{width:45%}.itemHotelContent .blocoReserve .itemVarValorFinal{float:left;margin:0}.itemHotelContent .blocoReserve .itemBtnEfetuarReserva{position:absolute;top:0;right:0;margin:0}.itemHotelContent .itemBtnMaisAcomodacoes{margin-top:15px;display:block;text-align:center;width:100%}.itemVarValorAuxiliar{margin:0;float:left}.itemBtnSelecionarAcomodacao,.itemVarDescricaoFormasPagamento,.itemVarPercentualDesconto,.quantidadeDisponivel{display:none!important}';
+      css.href = 'challenge.css';
       document.body.appendChild(css);
     },
 
-    removeButtonEvent: function() {
+    // Add custom event for "reserve" button and close modal
+    addButtonEvents: function() {
       const buttons = document.querySelectorAll('.itemBtnMaisAcomodacoes');
 
-      for (i in buttons) {
-        if(buttons[i]) {
-          buttons[i].setAttribute('onclick', 'javascript:void(0)');
+      for (let i = 0; i < buttons.length; i++) {
+        if (buttons[i]) {
+					// Get hotel ID from source code
+					let hotelID = buttons[i].getAttribute('onclick');
+					hotelID = hotelID.split('('); // explode string to get the ID
+					hotelID = hotelID[1].substr(0,1); // select only the first character of index 1
+
+					// Remove onclick attr from HTML
+					buttons[i].setAttribute('onclick', 'javascript:void(0)');
+
+					// Dispatch events
           buttons[i].addEventListener('click', function(e){
             e.preventDefault();
-            Public.requestHotelInfo();
+            Public.requestHotelInfo(hotelID);
             return false;
           });
         }
       }
+
+			document.querySelector('#closeModal').addEventListener('click', function(e){
+				e.preventDefault();
+				Public.toggleModal();
+				return false;
+			});
     },
 
-    requestHotelInfo: function() {
-      alert('Yoloooo!');
+    // Request hotel info to build modal
+    requestHotelInfo: function(id) {
+			const xmlHttp = new XMLHttpRequest();
+	    xmlHttp.onreadystatechange = function() {
+	    	if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+	      	Public.buildModalContent(JSON.parse(xmlHttp.responseText));
+	    }
+	    // xmlHttp.open('GET', `https://www.pmweb.com.br/teste-cro/promocoes/${id}.json`, true);
+			xmlHttp.open('GET', 'http://localhost:3000/promo.json', true);
+	    xmlHttp.send(null);
+
+			// Open modal
+  		Public.toggleModal();
     },
+
+		// Open or close hotel promo modal
+		toggleModal: function() {
+			const modal = document.querySelector('.modal-promo');
+			const modalHotelList = document.querySelector('.modal-hotel-list');
+
+      if (modal.style.display == '' || modal.style.display == 'none') {
+        modal.style.display = 'block';
+      } else {
+        modal.style.display = 'none';
+
+				// reset hotel list
+				modalHotelList.innerHTML = '';
+      }
+		},
+
+    // Insert blank modal on page
+    insertModal: function() {
+      const modal = document.createElement('div');
+      const modalContent = document.createElement('div');
+			const hotelList = document.createElement('div');
+
+      modal.className = 'modal-promo';
+      modalContent.className = 'modal-promo-content';
+			modalContent.innerHTML = '<h1>Promoções</h1><button id="closeModal" class="close"></button>';
+			hotelList.className = 'modal-hotel-list';
+
+      document.body.appendChild(modal);
+      modal.appendChild(modalContent);
+			modalContent.appendChild(hotelList);
+    },
+
+		buildModalContent: function(response) {
+			const modalContent = document.querySelector('.modal-hotel-list');
+			let promoContent = '';
+
+			for (let i = 0; i < response.length; i++) {
+				// Build the promo description list
+				let descriptionContent = '';
+				for (let k = 0; k < response[i].DescricaoTarifa.length; k++) {
+					descriptionContent += '<li>- '+response[i].DescricaoTarifa[k]+'</li>';
+				}
+
+				// Build the promo HTML
+				let className =  i % 4 == 0 ? 'no-border' : '';
+				promoContent += '<div class="promo '+className+'">'+
+					'<div class="title">'+response[i].NomeTarifa+'</div>'+
+					'<ul>'+descriptionContent+'</ul>'+
+					'<div class="values">'+
+						'<div class="old-value">'+Public.maskPrice(response[i].ValorTarifaSemDesconto)+'</div>'+
+						'<div class="new-value">'+Public.maskPrice(response[i].ValorTarifa)+'</div>'+
+					'</div>'+
+					'<div><button class="btn">Reservar</button></div>'+
+				'</div>';
+			}
+
+			modalContent.innerHTML = promoContent;
+		},
+
+		maskPrice: function (value) {
+			const valueReturn = 'R$ '+value+',00';
+			return valueReturn;
+		}
   }
 	return Public;
 })();
