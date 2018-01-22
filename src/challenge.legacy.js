@@ -20,6 +20,7 @@ var Letsbook = function () {
 			img.src = 'https://i.imgur.com/VMNACWl.png';
 		},
 
+		// Function to inject the custom CSS on the page
 		appendCSS: function appendCSS() {
 			var css = document.createElement('style');
 			css.type = "text/css";
@@ -67,7 +68,6 @@ var Letsbook = function () {
 				if (xmlHttp.readyState == 4 && xmlHttp.status == 200) Public.buildModalContent(JSON.parse(xmlHttp.responseText));
 			};
 			xmlHttp.open('GET', 'https://www.pmweb.com.br/cro/promocoes/' + id + '.json', true);
-			// xmlHttp.open('GET', 'http://localhost:3000/promo.json', true);
 			xmlHttp.send(null);
 
 			// Open modal

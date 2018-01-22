@@ -11,6 +11,8 @@ Build minified JS file:
 
 How to use:
 
+* Open the page https://demo2.letsbook.com.br/D/Reserva?cidade=SPO;
+
 * Open your browser console (F12);
 
 * Copy and paste the content of **build/challenge.js** and press center;
