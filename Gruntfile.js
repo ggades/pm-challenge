@@ -23,11 +23,23 @@ module.exports = function (grunt) {
           'build/challenge.min.js': ['src/challenge.legacy.js']
         }
       }
+    },
+    cssmin: {
+      options: {
+        mergeIntoShorthands: false,
+        roundingPrecision: -1
+      },
+      target: {
+        files: {
+          'build/challenge.min.css': 'src/challenge.css'
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-  grunt.registerTask('build', ['babel', 'uglify']);
+  grunt.registerTask('build', ['babel', 'uglify', 'cssmin']);
 }
