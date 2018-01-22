@@ -15,6 +15,6 @@ How to use:
 
 * Open your browser console (F12);
 
-* Copy and paste the content of **build/challenge.js** and press center;
+* Copy and paste the content of **build/challenge.min.js** and press center;
 
 * See the magic happen.

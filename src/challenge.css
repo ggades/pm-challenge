@@ -205,6 +205,7 @@
 }
 .modal-promo-content .promo.no-border{
   border: 0;
+  clear: left;
 }
 .modal-promo-content .promo .title{
   font-weight: bold;
